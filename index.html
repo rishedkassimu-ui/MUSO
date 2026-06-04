@@ -472,6 +472,113 @@
       .cta-card { flex-direction: column; align-items: flex-start; }
       footer { padding: 16px 20px; flex-direction: column; gap: 4px; align-items: flex-start; }
     }
+
+    /* ── ENHANCED RESPONSIVE LAYER (additive only — no original styles changed) ── */
+
+    /* ── Large tablets & small laptops (768px–1024px) ── */
+    @media (max-width: 1024px) and (min-width: 701px) {
+      .nav-bar { width: 200px; padding: 24px 8px; }
+      .nav-tab { padding: 12px 12px; font-size: 13px; }
+      main { padding: 28px 28px; }
+      .topbar { padding: 0 24px; }
+      .cta-card { padding: 24px 24px; gap: 18px; }
+      .cards-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    }
+
+    /* ── Mobile-specific enhancements (≤700px) ── */
+    @media (max-width: 700px) {
+
+      /* Topbar: keep logo visible on tiny screens */
+      .topbar { height: 56px; }
+      .brand-name { font-size: 15px; }
+      .brand-mark { width: 32px; height: 32px; font-size: 14px; }
+
+      /* Nav: make the horizontal pill-bar scrollable & touch-friendly */
+      .nav-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 10px 10px;
+        gap: 6px;
+      }
+      .nav-bar::-webkit-scrollbar { display: none; }
+
+      /* Nav tabs: compact icon + short label pill design */
+      .nav-tab {
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 12px;
+        font-size: 11px;
+        min-width: 72px;
+        border-radius: 10px;
+        line-height: 1.2;
+        text-align: center;
+      }
+      .nav-tab svg { width: 20px; height: 20px; }
+
+      /* Main content: breathable but compact */
+      main { padding: 18px 14px; }
+
+      /* Page header: tighter on mobile */
+      .page-header { margin-bottom: 18px; }
+      .page-header h1 { font-size: 18px; }
+      .page-header p { font-size: 12.5px; }
+
+      /* CTA card: full-width stack */
+      .cta-card { padding: 20px 18px; border-radius: 10px; gap: 16px; }
+      .cta-left h2 { font-size: 16px; }
+      .cta-left p { font-size: 12.5px; }
+
+      /* CTA button: full width on mobile */
+      .cta-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 18px;
+        font-size: 13px;
+        border-radius: 8px;
+      }
+
+      /* Info cards: single column on small phones */
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .info-card { padding: 16px 16px; border-radius: 9px; }
+      .info-card h3 { font-size: 13px; }
+      .info-card p { font-size: 12px; }
+
+      /* Status bar */
+      .status-bar { font-size: 11px; margin-top: 14px; }
+
+      /* Footer */
+      footer { margin-top: 36px; }
+      .footer-left { font-size: 11px; }
+    }
+
+    /* ── Extra-small phones (≤380px) ── */
+    @media (max-width: 380px) {
+      .nav-tab { min-width: 62px; padding: 7px 8px; font-size: 10px; }
+      .nav-tab svg { width: 18px; height: 18px; }
+      main { padding: 14px 10px; }
+      .cta-card { padding: 16px 14px; }
+      .page-header h1 { font-size: 16px; }
+    }
+
+    /* ── Prevent horizontal overflow on ALL screen sizes ── */
+    html, body { overflow-x: hidden; max-width: 100%; }
+    .page-body { min-width: 0; }
+    main { min-width: 0; overflow-wrap: break-word; word-break: break-word; }
+    .cta-left p { max-width: 100%; }
+    img, svg, video { max-width: 100%; height: auto; }
+
+    /* ── Touch: larger tap targets ── */
+    @media (hover: none) and (pointer: coarse) {
+      .nav-tab { min-height: 44px; }
+      .cta-btn { min-height: 48px; }
+    }
   </style>
 
   <script>
