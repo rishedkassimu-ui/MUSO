@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MUSO Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #E8650A;
+      --orange-light: #FDF0E8;
+      --orange-mid: #F5803A;
+      --blue: #2D82C9;
+      --blue-light: #EAF3FB;
+      --blue-mid: #5BA3D9;
+      --green: #20C997;
+      --green-light: #E6F9F4;
+      --green-mid: #1BA87E;
+      
+      /* New Colors for Added Tabs */
+      --purple: #845EF7;
+      --purple-light: #F3F0FF;
+      --purple-mid: #7048E8;
+      --red: #FA5252;
+      --red-light: #FFF5F5;
+      --red-mid: #F03E3E;
+
+      --white: #FFFFFF;
+      --gray-100: #F8F9FA;
+      --gray-200: #E9ECEF;
+      --gray-400: #ADB5BD;
+      --gray-500: #868E96;
+      --gray-600: #6C757D;
+      --gray-700: #495057;
+      --gray-800: #343A40;
+      --gray-900: #212529;
+      --border: #DEE2E6;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.05);
+      
+      /* Fallback variables for the dynamic soft themes */
+      --dyn-nav-bg: linear-gradient(145deg, rgba(245, 128, 58, 0.15) 0%, rgba(232, 101, 10, 0.05) 100%);
+      --dyn-main-bg: linear-gradient(135deg, rgba(253, 240, 232, 0.6) 0%, rgba(255, 250, 246, 0.3) 100%);
+
+      --glow-orange: 0 8px 32px 0 rgba(232, 101, 10, 0.15);
+      --glow-blue: 0 8px 32px 0 rgba(45, 130, 201, 0.15);
+      --glow-green: 0 8px 32px 0 rgba(32, 201, 151, 0.15);
+      --glow-purple: 0 8px 32px 0 rgba(132, 94, 247, 0.15);
+      --glow-red: 0 8px 32px 0 rgba(250, 82, 82, 0.15);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-900);
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--orange);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--white);
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-900);
+      letter-spacing: 0.3px;
+    }
+
+    .topbar-right {
+      font-size: 12px;
+      color: var(--gray-400);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Body layout: sidebar + content ── */
+    .page-body {
+      display: flex;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ── Soft & Elegant Glassmorphism Vertical Nav Sidebar ── */
+    .nav-bar {
+      width: 240px;
+      flex-shrink: 0;
+      /* Dynamic Soft Background assigned via JS */
+      background: var(--dyn-nav-bg);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-right: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 32px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.03), inset -1px 0 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-500);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0 12px 6px;
+      position: relative;
+    }
+
+    /* Glass Navigation Tab Component */
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-700); 
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.4;
+      letter-spacing: 0.2px;
+      width: 100%;
+      text-align: left;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: 
+        color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Shimmer Effect overlay layer */
+    .nav-tab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transform: skewX(-25deg);
+      transition: none;
+    }
+
+    /* Interaction Motion & Colors Changes */
+    .nav-tab:hover {
+      color: var(--gray-900);
+      background: rgba(255, 255, 255, 0.4);
+      border-color: rgba(255, 255, 255, 0.6);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.4);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .nav-tab:hover::before {
+      left: 150%;
+      transition: left 0.8s ease-in-out;
+    }
+
+    .nav-tab:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* Active States: White glass background to pop beautifully */
+    .nav-tab.active-orange {
+      color: var(--orange-mid);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 1);
+      border-left: 5px solid var(--orange);
+      font-weight: 600;
+      box-shadow: var(--glow-orange);
+      animation: tabIntroActive 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .nav-tab.active-blue {
+      color: var(--blue-mid);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 1);
+      border-left: 5px solid var(--blue);
+      font-weight: 600;
+      box-shadow: var(--glow-blue);
+      animation: tabIntroActive 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .nav-tab.active-green {
+      color: var(--green-mid);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 1);
+      border-left: 5px solid var(--green);
+      font-weight: 600;
+      box-shadow: var(--glow-green);
+      animation: tabIntroActive 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .nav-tab.active-purple {
+      color: var(--purple-mid);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 1);
+      border-left: 5px solid var(--purple);
+      font-weight: 600;
+      box-shadow: var(--glow-purple);
+      animation: tabIntroActive 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .nav-tab.active-red {
+      color: var(--red-mid);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 1);
+      border-left: 5px solid var(--red);
+      font-weight: 600;
+      box-shadow: var(--glow-red);
+      animation: tabIntroActive 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Complex Motion Elements for Icons */
+    .nav-tab svg {
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.4s ease;
+    }
+
+    .nav-tab:hover svg { transform: scale(1.15) rotate(4deg); }
+    .nav-tab.active-orange svg { transform: scale(1.05); stroke: var(--orange-mid); }
+    .nav-tab.active-blue svg { transform: scale(1.05); stroke: var(--blue-mid); }
+    .nav-tab.active-green svg { transform: scale(1.05); stroke: var(--green-mid); }
+    .nav-tab.active-purple svg { transform: scale(1.05); stroke: var(--purple-mid); }
+    .nav-tab.active-red svg { transform: scale(1.05); stroke: var(--red-mid); }
+
+    /* Keyframe Motion Sequences */
+    @keyframes tabIntroActive {
+      0% { transform: scale(0.95); opacity: 0.8; filter: brightness(1.2); }
+      100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+    }
+
+    /* ── Main content area ── */
+    main {
+      flex: 1;
+      padding: 40px 44px;
+      min-width: 0;
+      background: var(--dyn-main-bg);
+    }
+
+    /* ── Panels ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 4px;
+    }
+    .page-header p {
+      font-size: 13.5px;
+      color: var(--gray-600);
+      font-weight: 400;
+    }
+
+    /* ── Accent line ── */
+    .accent-line {
+      height: 3px;
+      width: 40px;
+      border-radius: 2px;
+      margin: 10px 0 20px;
+    }
+
+    .accent-orange { background: var(--orange); }
+    .accent-blue { background: var(--blue); }
+    .accent-green { background: var(--green); }
+    .accent-purple { background: var(--purple); }
+    .accent-red { background: var(--red); }
+
+    /* ── Cards grid ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .info-card-icon {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .icon-orange { background: var(--orange-light); }
+    .icon-blue   { background: var(--blue-light); }
+    .icon-green  { background: var(--green-light); }
+    .icon-purple { background: var(--purple-light); }
+    .icon-red    { background: var(--red-light); }
+
+    .info-card-icon svg { width: 20px; height: 20px; }
+
+    .info-card h3 {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 5px;
+    }
+
+    .info-card p {
+      font-size: 12.5px;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+
+    /* ── CTA Card ── */
+    .cta-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 36px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .cta-card-orange { border-top: 3px solid var(--orange); }
+    .cta-card-blue   { border-top: 3px solid var(--blue); }
+    .cta-card-green  { border-top: 3px solid var(--green); }
+    .cta-card-purple { border-top: 3px solid var(--purple); }
+    .cta-card-red    { border-top: 3px solid var(--red); }
+
+    .cta-left h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 6px;
+    }
+
+    .cta-left p {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.6;
+      max-width: 520px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 26px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: 0.2px;
+      transition: opacity 0.18s, transform 0.15s;
+      flex-shrink: 0;
+    }
+
+    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .cta-btn:active { transform: translateY(0); opacity: 1; }
+
+    .btn-orange { background: var(--orange); color: var(--white); border: 1px solid var(--orange); }
+    .btn-blue { background: var(--blue); color: var(--white); border: 1px solid var(--blue); }
+    .btn-green { background: var(--green); color: var(--white); border: 1px solid var(--green); }
+    .btn-purple { background: var(--purple); color: var(--white); border: 1px solid var(--purple); }
+    .btn-red { background: var(--red); color: var(--white); border: 1px solid var(--red); }
+
+    .cta-btn svg { width: 15px; height: 15px; }
+
+    /* ── Status bar ── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #28a745;
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 60px;
+      border-top: 1px solid var(--border);
+      padding: 20px 40px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left { font-size: 12px; color: var(--gray-400); }
+    .footer-right { font-size: 12px; color: var(--gray-400); }
+
+    /* Responsive glass adjustment updates */
+    @media (max-width: 700px) {
+      .page-body { flex-direction: column; }
+      .nav-bar { 
+        width: 100%; 
+        flex-direction: row; 
+        padding: 8px; 
+        border-right: none; 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4); 
+        gap: 8px;
+        overflow-x: auto;
+      }
+      .nav-label { display: none; }
+      .nav-tab { 
+        border-left: 1px solid transparent; 
+        border-bottom: none; 
+        padding: 12px 14px; 
+        font-size: 13px; 
+        border-radius: 8px;
+        white-space: nowrap;
+      }
+      .nav-tab:hover { transform: translateY(-1px) scale(1.01); }
+      .nav-tab.active-orange { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--orange); }
+      .nav-tab.active-blue { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--blue); }
+      .nav-tab.active-green { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--green); }
+      .nav-tab.active-purple { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--purple); }
+      .nav-tab.active-red { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--red); }
+      main { padding: 24px 20px; }
+      .topbar { padding: 0 20px; }
+      .topbar-right { display: none; }
+      .cta-card { flex-direction: column; align-items: flex-start; }
+      footer { padding: 16px 20px; flex-direction: column; gap: 4px; align-items: flex-start; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      const themes = [
+        { // Theme 1: Soft Orange
+          nav: 'linear-gradient(145deg, rgba(245, 128, 58, 0.15) 0%, rgba(232, 101, 10, 0.05) 100%)',
+          main: 'linear-gradient(135deg, rgba(253, 240, 232, 0.6) 0%, rgba(255, 250, 246, 0.3) 100%)'
+        },
+        { // Theme 2: Soft Blue
+          nav: 'linear-gradient(145deg, rgba(91, 163, 217, 0.15) 0%, rgba(45, 130, 201, 0.05) 100%)',
+          main: 'linear-gradient(135deg, rgba(234, 243, 251, 0.6) 0%, rgba(248, 251, 254, 0.3) 100%)'
+        },
+        { // Theme 3: Soft Green
+          nav: 'linear-gradient(145deg, rgba(32, 201, 151, 0.15) 0%, rgba(27, 168, 126, 0.05) 100%)',
+          main: 'linear-gradient(135deg, rgba(230, 249, 244, 0.6) 0%, rgba(246, 253, 251, 0.3) 100%)'
+        }
+      ];
+      // Pick a random soft theme
+      const t = themes[Math.floor(Math.random() * themes.length)];
+      // Apply theme strictly to CSS variables
+      document.documentElement.style.setProperty('--dyn-nav-bg', t.nav);
+      document.documentElement.style.setProperty('--dyn-main-bg', t.main);
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div>
+        <div class="brand-name">MUSO Portal</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+  <nav class="nav-bar" role="tablist" aria-label="Portal navigation">
+    <div class="nav-label">Navigation</div>
+
+    <button class="nav-tab active-orange" role="tab" aria-selected="true"
+            id="tab-malalamiko" aria-controls="panel-malalamiko"
+            onclick="switchTab('malalamiko', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      E-Malalamiko
+    </button>
+
+    <button class="nav-tab" role="tab" aria-selected="false"
+            id="tab-booking" aria-controls="panel-booking"
+            onclick="switchTab('booking', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      Venue &amp; Ground Booking
+    </button>
+
+    <button class="nav-tab" role="tab" aria-selected="false"
+            id="tab-bunge" aria-controls="panel-bunge"
+            onclick="switchTab('bunge', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+      BUNGE (SRC)
+    </button>
+
+    <button class="nav-tab" role="tab" aria-selected="false"
+            id="tab-assistance" aria-controls="panel-assistance"
+            onclick="switchTab('assistance', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      MUSO Assistance Fund
+    </button>
+
+    <button class="nav-tab" role="tab" aria-selected="false"
+            id="tab-interview" aria-controls="panel-interview"
+            onclick="switchTab('interview', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+      </svg>
+      Interview Registration
+    </button>
+
+  </nav>
+
+  <main>
+
+    <section class="panel active" id="panel-malalamiko" role="tabpanel" aria-labelledby="tab-malalamiko">
+      <div class="page-header">
+        <h1>E-Malalamiko</h1>
+        <div class="accent-line accent-orange"></div>
+        <p>Submit and track your complaints securely through the digital complaints management system.</p>
+      </div>
+
+      <div class="cta-card cta-card-orange">
+        <div class="cta-left">
+          <h2>E-Malalamiko System</h2>
+          <p>Access the full complaints platform to submit a new complaint, check progress on an existing one, or review previous submissions.</p>
+          <div class="status-bar">
+            <span class="status-dot"></span>
+            System online and available
+          </div>
+        </div>
+        <a href="https://rishedkassimu-ui.github.io/MUSO-E-MALALAMIKO/" class="cta-btn btn-orange">
+          Open E-Malalamiko System
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cards-grid" style="margin-top:28px;">
+        <div class="info-card">
+          <div class="info-card-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8650A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          </div>
+          <h3>Wasilisha Malalamiko</h3>
+          <p>Wasilisha malalamiko yako kwa urahisi na kwa usalama kupitia mfumo wetu wa kidijitali kwa hatua chache rahisi.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8650A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h3>Mapendekezo &amp; Ushauri</h3>
+          <p>Toa mapendekezo yako au ushauri kwa uongozi ili kuboresha huduma na mazingira ya wanafunzi.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8650A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <h3>Maswali &amp; Maombi</h3>
+          <p>Uliza maswali yoyote yanayohusu huduma, haki, au mahitaji yako kama mwanafunzi — tutakujibu kwa wakati.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8650A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h3>Usiri wa Taarifa Binafsi</h3>
+          <p>Taarifa zako binafsi na maelezo yako ni siri kabisa. Hakuna wizara wala mamlaka yoyote itakayoweza kuona taarifa zako za kibinafsi — usalama wako ni kipaumbele chetu.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8650A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Uwajibikaji</h3>
+          <p>Wizara husika au mamlaka itashughulikia kila taarifa kwa uzito na uwajibikaji wa hali ya juu kuhakikisha haki inafanyiwa kazi.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8650A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <h3>Ustawi wa Wanafunzi</h3>
+          <p>Lengo letu kuu ni ustawi wa wanafunzi wote. Kila malalamiko, pendekezo au swali linachukuliwa kama fursa ya kuboresha mazingira yako.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8650A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Usawa &amp; Uwazi</h3>
+          <p>Kila taarifa ina uzito sawa bila kujali hali ya mwasilishaji. Malalamiko, mapendekezo na maswali yote yanashughulikiwa kikamilifu na kwa uwazi bila upendeleo.</p>
+        </div>
+      </div>
+      
+      <footer>
+        <span class="footer-left">&copy; 2026 MUSO Portal &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; a product by Rished Kassimu</span>
+        <span class="footer-right"></span>
+      </footer>
+    </section>
+
+    <section class="panel" id="panel-booking" role="tabpanel" aria-labelledby="tab-booking">
+      <div class="page-header">
+        <h1>Venue &amp; Ground Booking</h1>
+        <div class="accent-line accent-blue"></div>
+        <p>Reserve venues, grounds, and facilities for events, meetings, and sports activities.</p>
+      </div>
+
+      <div class="cta-card cta-card-blue">
+        <div class="cta-left">
+          <h2>Booking Platform</h2>
+          <p>Access the reservation system to check availability, make a new booking, or manage an existing reservation for any MUSO facility.</p>
+          <div class="status-bar">
+            <span class="status-dot"></span>
+            Booking system online and available
+          </div>
+        </div>
+        <a href="https://rishedkassimu-ui.github.io/MUSO-BOOKING-PLATFORM/" class="cta-btn btn-blue">
+          Open Booking System
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cards-grid" style="margin-top:28px;">
+        <div class="info-card">
+          <div class="info-card-icon icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2D82C9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h3>Check Availability</h3>
+          <p>Browse available dates and time slots for all venues and outdoor grounds in real time.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2D82C9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h3>Select a Venue</h3>
+          <p>Choose from available halls, conference rooms, sports grounds, and outdoor facilities.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2D82C9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <h3>Confirm Booking</h3>
+          <p>Receive an instant booking reference and confirmation notification upon successful reservation.</p>
+        </div>
+      </div>
+      
+      <footer>
+        <span class="footer-left">&copy; 2026 MUSO Portal &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; a product by Rished Kassimu</span>
+        <span class="footer-right"></span>
+      </footer>
+    </section>
+
+    <section class="panel" id="panel-bunge" role="tabpanel" aria-labelledby="tab-bunge">
+      <div class="page-header">
+        <h1>BUNGE (SRC)</h1>
+        <div class="accent-line accent-green"></div>
+        <p>Digital Parliament Management System kwa ajili ya uwazi, haki, na ufanisi kwenye maamuzi ya wanafunzi.</p>
+      </div>
+
+      <div class="cta-card cta-card-green">
+        <div class="cta-left">
+          <h2>Mfumo wa Bunge</h2>
+          <p>Fikia mfumo rasmi wa kusimamia shughuli za bunge, kutazama mienendo ya vikao, na kufuatilia matokeo ya kura kielektroniki moja kwa moja.</p>
+          <div class="status-bar">
+            <span class="status-dot"></span>
+            Parliament system online and available
+          </div>
+        </div>
+        <a href="https://rishedkassimu-ui.github.io/BUNGE-/" class="cta-btn btn-green">
+          Ingia Kwenye Bunge
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cards-grid" style="margin-top:28px;">
+        <div class="info-card">
+          <div class="info-card-icon icon-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#20C997" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Uwazi na Haki</h3>
+          <p>Mfumo umeundwa kuhakikisha kura zinapigwa kwa haki, ambapo kila mbunge anashuhudia matokeo yakihesabiwa kwa uwazi kuzuia dosari zozote zile.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#20C997" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h3>Usimamizi wa Spika</h3>
+          <p>Spika anayo mamlaka na mfumo imara wa kusimamia mpangilio mzima wa ukumbi na utoaji wa mada ili kuhakikisha bunge linaenda kwa kufuata miongozo na taratibu.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#20C997" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Upigaji Kura Kielektroniki</h3>
+          <p>Wabunge wote wana uwezo wa kupiga kura kielektroniki (electronic voting) kwenye hoja mbalimbali, kurahisisha na kuharakisha utoaji wa maamuzi bungeni.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#20C997" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>Matokeo na Muda Halisi</h3>
+          <p>Matokeo yanaonyeshwa moja kwa moja bila kuchelewa (real-time results) yakiambatana na live countdown timers ili kutoa mwelekeo kamili wa muda wa upigaji kura uliosalia.</p>
+        </div>
+      </div>
+      
+      <footer>
+        <span class="footer-left">&copy; 2026 MUSO Portal &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; a product by Rished Kassimu</span>
+        <span class="footer-right"></span>
+      </footer>
+    </section>
+
+    <section class="panel" id="panel-assistance" role="tabpanel" aria-labelledby="tab-assistance">
+      <div class="page-header">
+        <h1>MUSO Assistance Fund</h1>
+        <div class="accent-line accent-purple"></div>
+        <p>Apply for financial assistance and track your fund requests seamlessly and securely.</p>
+      </div>
+
+      <div class="cta-card cta-card-purple">
+        <div class="cta-left">
+          <h2>Assistance Fund Portal</h2>
+          <p>Access the portal to submit your application for the MUSO Assistance Fund, upload requirements, and get the support you need.</p>
+          <div class="status-bar">
+            <span class="status-dot"></span>
+            Application system online and available
+          </div>
+        </div>
+        <a href="https://rishedkassimu-ui.github.io/musofund/" class="cta-btn btn-purple">
+          Open Application
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cards-grid" style="margin-top:28px;">
+        <div class="info-card">
+          <div class="info-card-icon icon-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#845EF7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <h3>Easy Application</h3>
+          <p>Submit your request with minimal paperwork. The digital application process is designed to be fast and student-friendly.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#845EF7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h3>Strict Confidentiality</h3>
+          <p>Your financial information and application details are handled with the highest level of privacy and security.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#845EF7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Track Status</h3>
+          <p>Monitor your application's progress in real-time to know exactly when funds have been approved and disbursed.</p>
+        </div>
+      </div>
+      
+      <footer>
+        <span class="footer-left">&copy; 2026 MUSO Portal &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; a product by Rished Kassimu</span>
+        <span class="footer-right"></span>
+      </footer>
+    </section>
+
+    <section class="panel" id="panel-interview" role="tabpanel" aria-labelledby="tab-interview">
+      <div class="page-header">
+        <h1>Interview Registration</h1>
+        <div class="accent-line accent-red"></div>
+        <p>Register and secure your spot for upcoming MUSO leadership and committee interviews.</p>
+      </div>
+
+      <div class="cta-card cta-card-red">
+        <div class="cta-left">
+          <h2>Registration Portal</h2>
+          <p>Apply for open positions within the student organization and book your interview slot conveniently online.</p>
+          <div class="status-bar">
+            <span class="status-dot"></span>
+            Registration system online and available
+          </div>
+        </div>
+        <a href="https://rishedkassimu-ui.github.io/musoapplication/" class="cta-btn btn-red">
+          Open Registration
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cards-grid" style="margin-top:28px;">
+        <div class="info-card">
+          <div class="info-card-icon icon-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FA5252" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/>
+            </svg>
+          </div>
+          <h3>Profile Setup</h3>
+          <p>Create a comprehensive candidate profile highlighting your skills, experiences, and vision for the respective role.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FA5252" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h3>Schedule Booking</h3>
+          <p>Select an interview time slot that best fits your academic schedule directly from the available times provided by the panel.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon icon-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FA5252" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Instant Updates</h3>
+          <p>Receive immediate notifications regarding your interview status, panel feedback, and final selection results.</p>
+        </div>
+      </div>
+      
+      <footer>
+        <span class="footer-left">&copy; 2026 MUSO Portal &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; a product by Rished Kassimu</span>
+        <span class="footer-right"></span>
+      </footer>
+    </section>
+
+  </main>
+
+  </div><script>
+    const TABS = {
+      malalamiko: 'active-orange',
+      booking:    'active-blue',
+      bunge:      'active-green',
+      assistance: 'active-purple',
+      interview:  'active-red'
+    };
+
+    function switchTab(name, btn) {
+      document.querySelectorAll('.nav-tab').forEach(b => {
+        b.classList.remove('active-orange', 'active-blue', 'active-green', 'active-purple', 'active-red');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add(TABS[name]);
+      btn.setAttribute('aria-selected', 'true');
+
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + name).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
