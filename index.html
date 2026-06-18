@@ -453,12 +453,12 @@
       .page-body { flex-direction: column; }
       .nav-bar { 
         width: 100%; 
-        flex-direction: row; 
+        flex-direction: column; 
         padding: 8px; 
         border-right: none; 
         border-bottom: 1px solid rgba(255, 255, 255, 0.4); 
         gap: 8px;
-        overflow-x: auto;
+        overflow-x: visible;
       }
       .nav-label { display: none; }
       .nav-tab { 
@@ -467,14 +467,9 @@
         padding: 12px 14px; 
         font-size: 13px; 
         border-radius: 8px;
-        white-space: nowrap;
+        white-space: normal;
       }
       .nav-tab:hover { transform: translateY(-1px) scale(1.01); }
-      .nav-tab.active-orange { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--orange); }
-      .nav-tab.active-blue { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--blue); }
-      .nav-tab.active-green { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--green); }
-      .nav-tab.active-purple { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--purple); }
-      .nav-tab.active-red { border: 1px solid rgba(255, 255, 255, 1); border-bottom: 4px solid var(--red); }
       main { padding: 24px 20px; }
       .topbar { padding: 0 20px; }
       .topbar-right { display: none; }
@@ -502,11 +497,8 @@
       .brand-name { font-size: 15px; }
       .brand-mark { width: 32px; height: 32px; font-size: 14px; }
 
-      /* Nav: make the horizontal pill-bar scrollable & touch-friendly */
+      /* Nav: vertical stacked list, touch-friendly */
       .nav-bar {
-        position: sticky;
-        top: 0;
-        z-index: 100;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         padding: 10px 10px;
@@ -514,17 +506,15 @@
       }
       .nav-bar::-webkit-scrollbar { display: none; }
 
-      /* Nav tabs: full-title horizontal pill — never break the label */
+      /* Nav tabs: full-width row, stacked vertically */
       .nav-tab {
         flex-direction: row;
         align-items: center;
         gap: 8px;
         padding: 10px 16px;
         font-size: 13px;
-        white-space: nowrap;
-        width: auto;
-        min-width: unset;
-        flex-shrink: 0;
+        white-space: normal;
+        width: 100%;
         border-radius: 10px;
         line-height: 1.3;
         text-align: left;
